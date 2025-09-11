@@ -18,4 +18,4 @@
 
   console.log(item);
   console.log(`общая сумма товара: ${count * price}`);
-}
+};
