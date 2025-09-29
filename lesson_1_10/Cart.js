@@ -1,30 +1,25 @@
-
 'use strict';
-
 // Объект корзины
 const cart = {
   // товары в корзине
   items: [],
-  // общая стоимость корзины
-  totalPrice: 0,
   // общее количество единиц товара
   count: 0,
 
-  // получить общую стоимость товаров
-  getTotalPrice() {
-    return this.totalPrice;
+  // геттер общей стоимости корзины (сумма считается на лету)
+  get totalPrice() {
+    return this.calculateItemPrice();
   },
 
-  // пересчитать стоимость всей корзины с использованием reduce
+  // пересчитать стоимость всей корзины и вернуть сумму
   calculateItemPrice() {
-    this.totalPrice = this.items.reduce((acc, item) => {
+    return this.items.reduce((acc, item) => {
       return acc + item.price * item.quantity;
     }, 0);
   },
 
   // увеличить количество товаров (суммарный счетчик позиций)
   increaseCount(num) {
-    // ожидается число; приведем к числу и проверим
     const n = Number(num);
     if (!Number.isFinite(n) || n < 0) return;
     this.count += n;
@@ -64,34 +59,33 @@ const cart = {
       this.items.push(item);
     }
 
-    // Обновить счетчики
+    // Обновить счетчики (стоимость теперь не пересчитываем здесь)
     this.increaseCount(q);
-    this.calculateItemPrice();
   },
 
   // очистить корзину
   clear() {
     this.items = [];
-    this.totalPrice = 0;
     this.count = 0;
   },
 
   // распечатать корзину в консоль
   print() {
-    // JSON-строка массива items
+     // JSON-строка массива items
     console.log(JSON.stringify(this.items, null, 2));
     // следующая строка — общая стоимость корзины
     console.log(`Итого: ${this.getTotalPrice()}`);
   },
-};
+    };
 
 // ===== Проверка функционала =====
 
-// Добавим 3+ товара
 cart.add('Ноутбук', 75000, 1);
 cart.add('Мышь', 1500, 2);
-cart.add('Коврик', 500);          // количество по умолчанию 1
-cart.add('Мышь', 1500, 1);        // добавим к уже существующей позиции
+cart.add('Коврик', 500);
+cart.add('Мышь', 1500, 1);
 
-// Выводим в консоль
+// Попытка подмены суммы больше не сработает
+// не изменит геттер
+
 cart.print();
